@@ -1,12 +1,9 @@
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
 import java.awt.*;
-import java.awt.event.*;
 import java.awt.image.*;
 import java.io.*;
 import javax.imageio.*;
-import javax.swing.*;
 
 public class App {
     public static void main(String[] args) throws Exception {
@@ -17,26 +14,28 @@ public class App {
         }
 
         BufferedImage img = null;
-        try {
-            if (false) {
-                img = ImageIO.read(new File(args[0]));
-            } else {
-                img = ImageIO.read(new File("./test_images/shrek_face.jpg"));
-            }
+        try { //TODO: Make this given by user.
+            img = ImageIO.read(new File("./test_images/shrek_face.jpg"));
         } catch (IOException e) {
             System.out.println("\nInput invalid. Check filename or check if file exists.");
         }
 
         int w = img.getWidth(null);
         int h = img.getHeight(null);
-        if (w > 50) {
-            w = 50;
+        //System.out.println(w);
+        //System.out.println(h);
+        if (w > 100) {
+            double temp = ((double)h/(double)w);
+            h = (int)(50*temp);
+            w = 100;
         }
-        Image toolkitImage = img.getScaledInstance(w, -1, Image.SCALE_SMOOTH);
+        
+        System.out.println(w);
+        System.out.println(h);
+        Image toolkitImage = img.getScaledInstance(w, h, Image.SCALE_SMOOTH);
         w = toolkitImage.getWidth(null);
         h = toolkitImage.getHeight(null);
-        System.out.println(w);
-
+        
         // w and h are of the toolkit image
         BufferedImage newImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
         Graphics graph = newImage.getGraphics();
@@ -48,7 +47,6 @@ public class App {
             String row = "";
             for (int j = 0; j < w; j++) {
                 int p = newImage.getRGB(j,i);
-                
 
                 int a = (p>>24)&0xff;
                 int r = (p>>16)&0xff;
@@ -58,14 +56,14 @@ public class App {
                 //calculate average
                 int avg = (r+g+b)/3;
                 p = (a<<24) | (avg<<16) | (avg<<8) | avg;
-                if (avg < 75) {
-                    row = row + "##";
+                if (avg < 50) {
+                    row = row + "#";
                 } else if (avg < 100) {
-                    row = row + "XX";
-                } else if (avg < 150) {
-                    row = row + "//";
+                    row = row + "X";
+                } else if (avg < 125) {
+                    row = row + "/";
                 } else {
-                    row = row + "  ";
+                    row = row + " ";
                 }
                 newImage.setRGB(j, i, p);
             }
@@ -78,7 +76,6 @@ public class App {
 
         byte[] asciiInBytes = outputString.getBytes();
         outStream.write(asciiInBytes);
-
         outStream.flush();
         outStream.close();
 
@@ -89,9 +86,5 @@ public class App {
         }catch(IOException e){
             System.out.println(e);
         }
-
-        
     }
-
-
 }
