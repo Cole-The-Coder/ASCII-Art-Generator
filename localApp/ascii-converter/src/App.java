@@ -15,7 +15,7 @@ public class App {
 
         BufferedImage img = null;
         try { //TODO: Make this given by user.
-            img = ImageIO.read(new File("./test_images/shrek_face.jpg"));
+            img = ImageIO.read(new File("./test_images/dog.jpg"));
         } catch (IOException e) {
             System.out.println("\nInput invalid. Check filename or check if file exists.");
         }
